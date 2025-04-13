@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 class Vec3 {
 public:
@@ -19,9 +20,11 @@ public:
     }
 
     constexpr float operator[](size_t index) const {
+        assert(index < 3 && "Index out of bounds");
         return data_[index];
     }
     constexpr float& operator[](size_t index) {
+        assert(index < 3 && "Index out of bounds");
         return data_[index];
     }
 
@@ -40,6 +43,7 @@ public:
     }
 
     constexpr Vec3& operator/=(float scalar) {
+        assert(scalar != 0.0f && "Division by zero");
         return *this *= (1.0f / scalar);
     }
 
@@ -107,11 +111,16 @@ constexpr Vec3 cross(const Vec3& u, const Vec3& v) {
 }
 
 constexpr Vec3 unitVector(const Vec3& vec) {
-    return vec / vec.length();
+    float len = vec.length();
+    if (len == 0.0f) {
+        return Vec3(0.0f, 0.0f, 0.0f); // Return a zero vector if length is zero
+    }
+    return vec / len;
 }
 
-constexpr void writeColorToBuffer(uint8_t* buffer, const Color& color) {
-    buffer[0] = static_cast<uint8_t>(color.x() * 255.999f);
-    buffer[1] = static_cast<uint8_t>(color.y() * 255.999f);
-    buffer[2] = static_cast<uint8_t>(color.z() * 255.999f);
+inline void writeColorToBuffer(uint8_t* buffer, const Color& color) {
+    auto clamp = [](float x) { return x < 0.0f ? 0.0f : (x > 1.0f ? 1.0f : x); };
+    buffer[0] = static_cast<uint8_t>(clamp(color.x()) * 255.999f);
+    buffer[1] = static_cast<uint8_t>(clamp(color.y()) * 255.999f);
+    buffer[2] = static_cast<uint8_t>(clamp(color.z()) * 255.999f);
 }
