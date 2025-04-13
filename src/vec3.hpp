@@ -109,3 +109,9 @@ constexpr Vec3 cross(const Vec3& u, const Vec3& v) {
 constexpr Vec3 unitVector(const Vec3& vec) {
     return vec / vec.length();
 }
+
+constexpr void writeColorToBuffer(uint8_t* buffer, const Color& color) {
+    buffer[0] = static_cast<uint8_t>(color.x() * 255.999f);
+    buffer[1] = static_cast<uint8_t>(color.y() * 255.999f);
+    buffer[2] = static_cast<uint8_t>(color.z() * 255.999f);
+}
