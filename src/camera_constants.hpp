@@ -3,7 +3,7 @@
 #include "vec3.hpp"
 
 constexpr static float kAspectRatio{16.0f / 9.0f};
-constexpr static int32_t kImageWidth{200};
+constexpr static int32_t kImageWidth{640};
 
 constexpr static int32_t kImageHeight{int32_t(kImageWidth / kAspectRatio)};
 
