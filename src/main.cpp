@@ -5,18 +5,26 @@
 #include <memory>
 #include "camera_constants.hpp"
 
-bool hitSphere(const Point3& center, float radius, const Ray& ray) {
+float hitSphere(const Point3& center, float radius, const Ray& ray) {
     Vec3 oc = center - ray.origin();
     float a = dot(ray.direction(), ray.direction());
     float b = -2.0f * dot(ray.direction(), oc);
     float c = dot(oc, oc) - radius * radius;
     float discriminant = b * b - 4.0f * a * c;
-    return discriminant >= 0.0f;
+    
+    if(discriminant < 0.0f) {
+        return -1.0f;
+    }
+    else {
+        return (-b - sqrt(discriminant)) / (2.0f * a);    
+    }
 }
 
 Color rayColor(const Ray& ray) {
-    if(hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, ray)) {
-        return Color(1.0f, 0.0f, 0.0f);
+    float t = hitSphere(Point3(0.0f, 0.0f, -1.0f), 0.5f, ray);
+    if(t > 0.0f) {
+        Vec3 normal = unitVector(ray.at(t) - Vec3(0.0f, 0.0f, -1.0f));
+        return 0.5f * Color(normal.x() + 1.0f, normal.y() + 1.0f, normal.z() + 1.0f);
     }
 
     Vec3 unit_direction = unitVector(ray.direction());
